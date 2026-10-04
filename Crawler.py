@@ -76,55 +76,55 @@ response=requests.head(
     timeout =timeout
 )
 # -------------------------------------------------
-        # IF HEAD REQUEST DOES NOT WORK PROPERLY
-        # -------------------------------------------------
+# IF HEAD REQUEST DOES NOT WORK PROPERLY
+# -------------------------------------------------
 
-        # Some websites do not allow HEAD requests.
-        if response.status_code in [404, 405, 400, 403]:
-            response = requests.get(
-                url,
-                headers=headers,
-                allow_redirects=True,
-                timeout=timeout,
-                stream=True
-            )
+# Some websites do not allow HEAD requests.
+if response.status_code in [404, 405, 400, 403]:
+    response = requests.get(
+    url,
+    headers=headers,
+    allow_redirects=True,
+    timeout=timeout,
+    stream=True
+               )
 
-            # We only need the response status.
-            response.close()
+# We only need the response status.
+response.close()
 
-        # -------------------------------------------------
-        # CHECK HTTP STATUS CODE
-        # -------------------------------------------------
+# -------------------------------------------------
+# CHECK HTTP STATUS CODE
+# -------------------------------------------------
 
-        if response.status_code >= 400:
-            return (
-                response.status_code,
-                f"HTTP Error {response.status_code}"
-            )
+if response.status_code >= 400:
+    return (
+        response.status_code,
+        f"HTTP Error {response.status_code}"
+        )
 
-        # Status codes below 400 are considered working.
-        return response.status_code, None
+# Status codes below 400 are considered working.
+return response.status_code, None
 
-    # -----------------------------------------------------
-    # HANDLE TIMEOUT ERROR
-    # -----------------------------------------------------
+# -----------------------------------------------------
+# HANDLE TIMEOUT ERROR
+# -----------------------------------------------------
 
-    except requests.exceptions.Timeout:
-        return None, "Request Timed Out"
+except requests.exceptions.Timeout:
+    return None, "Request Timed Out"
 
-    # -----------------------------------------------------
-    # HANDLE TOO MANY REDIRECTS
-    # -----------------------------------------------------
+# -----------------------------------------------------
+# HANDLE TOO MANY REDIRECTS
+# -----------------------------------------------------
 
-    except requests.exceptions.TooManyRedirects:
-        return None, "Too Many Redirects"
+except requests.exceptions.TooManyRedirects:
+    return None, "Too Many Redirects"
 
-    # -----------------------------------------------------
-    # HANDLE OTHER REQUEST/NETWORK ERRORS
-    # -----------------------------------------------------
+# -----------------------------------------------------
+# HANDLE OTHER REQUEST/NETWORK ERRORS
+# -----------------------------------------------------
 
-    except requests.exceptions.RequestException:
-        return None, "Connection Error"
+except requests.exceptions.RequestException:
+    return None, "Connection Error"
 
 
 # ---------------------------------------------------------
